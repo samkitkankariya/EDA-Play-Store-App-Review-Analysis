@@ -15,7 +15,7 @@ Explore and analyse the data to discover key factors responsible for app engagem
 
 The business objective here is to gain actionable insights and make data-driven decisions to improve app performance and user satisfaction in the Google Play Store. This includes understanding user sentiments, analyzing app ratings, exploring category-wise trends, and identifying factors influencing app installs and reviews.
 
-[---]
+![---]
 
 # **Project Summary -**
 
