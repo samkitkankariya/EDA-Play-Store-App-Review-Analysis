@@ -238,10 +238,26 @@ Index(['App', 'Translated_Review', 'Sentiment', 'Sentiment_Polarity',
 
    - The NaN values in this case can be imputed by the aggregate (mean or median) of the remaining values in the Rating column.
 
+```python
+# Finding mean and median in the Rating column excluding the NaN values.
 
+mean_rating = round(data_df['Rating'].mean(),3)
+median_rating = data_df['Rating'].median()
+[mean_rating, median_rating]
+```
+```
+[4.192, 4.3]
+```
+*Visualization of distribution of rating using displot and detecting the outliers through boxplot.*
 
+```python
+fig, ax = plt.subplots(2,1, figsize=(12,7))
+sns.histplot(data=data_df, x = 'Rating', color = 'firebrick', kde=True, ax=ax[0])
+sns.boxplot(x='Rating', data=data_df, ax=ax[1])
+```
 
- 
+ ![image](https://github.com/samkitkankariya/EDA-Play-Store-App-Review-Analysis/assets/31250827/1319b410-1dc0-4e6a-8b86-1e969c4d7b62)
+
 - **Duplicates:**
    - Describe how duplicate rows were addressed in each dataset.
    - Explain the chosen approach for handling duplicates.
