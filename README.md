@@ -199,9 +199,6 @@ Index(['App', 'Translated_Review', 'Sentiment', 'Sentiment_Polarity',
    Number of duplicate rows in data_df: 483
    Number of duplicate rows in reviews_df: 33616
    ```
-   - Decide on an appropriate strategy to address duplicates (e.g., dropping or merging).
-
-
 ---
 
 ### Variables Description
@@ -258,13 +255,193 @@ sns.boxplot(x='Rating', data=data_df, ax=ax[1])
 
  ![image](https://github.com/samkitkankariya/EDA-Play-Store-App-Review-Analysis/assets/31250827/1319b410-1dc0-4e6a-8b86-1e969c4d7b62)
 
+*Findings : *
+* The mean of the average ratings (excluding the NaN values) comes to be 4.2.
+
+* The median of the entries (excluding the NaN values) in the 'Rating' column comes to be 4.3. From this we can say that 50% of the apps have an average rating of above 4.3, and the rest below 4.3.
+* From the distplot visualizations, it is clear that the ratings are left skewed.
+* We know that if the variable is skewed, the mean is biased by the values at the far end of the distribution. Therefore, the median is a better representation of the majority of the values in the variable.
+* Hence we will impute the NaN values in the Rating column with its median.
+
+```python
+# Replace missing values with the median
+data_df['Rating'].fillna(median_rating, inplace=True)
+
+#One Type value is null so remove it
+data_df.dropna(subset = 'Type', axis = 0, inplace = True)
+
+'''
+Since the NaN values in the Current Ver & Android Ver column cannot be replaced by any particular value, and, since there are only 8 and 2 rows respectively which contain NaN values in this column it can be be dropped.
+'''
+data_df.dropna(subset = ['Current Ver', 'Android Ver'], axis = 0, inplace = True)
+
+#In User Reviews data we drop the rows which dont have any reviews
+reviews_df.dropna(subset = 'Translated_Review', axis = 0, inplace = True)
+```
+  
 - **Duplicates:**
-   - Describe how duplicate rows were addressed in each dataset.
-   - Explain the chosen approach for handling duplicates.
-- **Insights:**
-   - Summarize the key findings from the data cleaning process.
-   - How does the cleaning process improve data quality and preparation for analysis?
+```python
+data_df['App'].value_counts()
+```
+```
+App
+ROBLOX                                                9
+CBS Sports App - Scores, News, Stats & Watch Live     8
+Candy Crush Saga                                      7
+8 Ball Pool                                           7
+ESPN                                                  7
+                                                     ..
+Meet U - Get Friends for Snapchat, Kik & Instagram    1
+U-Report                                              1
+U of I Community Credit Union                         1
+Waiting For U Launcher Theme                          1
+iHoroscope - 2018 Daily Horoscope & Astrology         1
+Name: count, Length: 9648, dtype: int64
+```
 
-This data wrangling process prepares the Play Store app information and user review datasets for further analysis by ensuring data quality, consistency, and completeness. The cleaned datasets are now ready for exploration and insights generation.
-        
+```python
+# dropping duplicates from the 'App' column.
+data_df.drop_duplicates(subset = 'App', inplace = True)
+data_df.shape
+```
 
+*Handling duplicates of User Reviews Dataset:*
+```python
+# Print the shape of the cleaned dataset before and after removing duplicates
+print("Shape of reviews_df before removing duplicates:", reviews_df.shape)
+
+# Check for duplicate rows in reviews_df
+duplicate_rows_reviews_df = reviews_df[reviews_df.duplicated()]
+num_duplicates_reviews_df = len(duplicate_rows_reviews_df)
+print(f"Number of duplicate rows in reviews_df: {num_duplicates_reviews_df}")
+
+# Remove duplicate rows from reviews_df based on all columns
+reviews_df = reviews_df.drop_duplicates()
+
+print("Shape of cleaned_reviews_df after removing duplicates:", reviews_df.shape)
+```
+```
+Shape of reviews_df before removing duplicates: (37427, 5)
+Number of duplicate rows in reviews_df: 7735
+Shape of cleaned_reviews_df after removing duplicates: (29692, 5)
+```
+#### Summary
+1. **Handling Missing Values**:
+   - Filled missing values in the 'Rating' column with the median value.
+   - Removed rows with missing values in the 'Type' column from 'data_df'.
+   - Removed rows with missing values in the 'Translated_Review' column from `reviews_df`.
+
+2. **Removing Duplicates**:
+   - Grouped `data_df` by various columns and calculated the mean of 'Installs'.
+   - Sorted `data_df` by 'Reviews' in descending order and dropped duplicate rows based on the 'App' column.
+   - Removed duplicate rows from `reviews_df` based on all columns.
+
+3. **Insights**:
+   - The median value was used to fill missing values in the 'Rating' column, ensuring no data loss in an important variable.
+   - Removing rows with missing 'Type' values in `data_df` ensures data integrity and completeness.
+   - The cleaning process in `reviews_df` removes redundant data, ensuring each review entry is unique.
+   - After cleaning, the datasets are ready for analysis without missing values or duplicate entries, providing accurate insights.
+
+These manipulations and insights contribute to data quality and prepare the datasets for meaningful analysis, ensuring reliable results and actionable conclusions.
+
+### Data Vizualization, Storytelling & Experimenting with charts : Understand the relationships between variables
+
+**Summary of Analysis Charts:**
+
+1. Number of Apps per Category
+   - Plot: Bar chart
+   - Insight: Identified the distribution of apps across different categories, highlighting popular and less popular categories.
+
+2. Number of Installs per App Category
+   - Plot: Bar chart
+   - Insight: Revealed which app categories have the highest number of installations, indicating user preferences and market demand.
+
+3. Rating Distribution
+   - Plot: Histogram
+   - Insight: Showed the spread of app ratings, including the concentration of ratings around certain values and any unusual patterns.
+
+4. Rating Groups
+   - Plot: Bar chart
+   - Insight: Grouped ratings into categories, providing a clearer understanding of the distribution of ratings across different groups.
+
+5. Reviews, Size, Installs, Price vs Rating
+   - Plot: Scatter plot
+   - Insight: Explored relationships between app features like reviews, size, installs, price, and ratings, highlighting any correlations or trends.
+
+6. Exploring App Ratings by Size and Category
+   - Plot: Box plot
+   - Insight: Investigated how app ratings vary based on their size and category, identifying potential factors influencing user ratings.
+
+7. Distribution of Paid and Free Apps
+   - Plot: Pie chart
+   - Insight: Showed the proportion of paid and free apps, indicating the market dynamics between paid and free offerings.
+
+8. Top Apps of Paid Type
+   - Plot: Bar chart
+   - Insight: Identified the top apps in the paid category, offering insights into popular paid apps and their characteristics.
+
+9. Content Rating Distribution
+   - Plot: Pie chart
+   - Insight: Illustrated the distribution of content ratings among apps, highlighting the diversity of content available.
+
+10. Distribution of Apps by Rating, Size, and Type
+    - Plot: Scatter plot
+    - Insight: Explored how apps are distributed based on their ratings, size, and type (paid or free), revealing patterns in app characteristics.
+
+11. Correlation Heatmap
+    - Plot: Heatmap
+    - Insight: Visualized correlations between different app features, such as reviews, installs, price, and ratings, indicating potential relationships.
+
+12. Different Distributions in User Review Data
+    - Plot: Multiple histograms
+    - Insight: Examined various distributions within user review data, including sentiment polarity, subjectivity, and other aspects.
+
+13. Correlation between 2 datasets
+    - Plot: Scatter plot
+    - Insight: Investigated correlations between data from two datasets, providing insights into potential connections or dependencies.
+
+14. Percentage of Review Sentiments
+    - Plot: Pie chart
+    - Insight: Analyzed the distribution of review sentiments (positive, neutral, negative), offering an overview of user sentiments towards apps.
+
+15. Distribution of Subjectivity
+    - Plot: Histogram
+    - Insight: Explored the distribution of subjectivity in app reviews, indicating the extent of personal opinions and emotions expressed.
+
+16. Is sentiment_subjectivity proportional to sentiment_polarity?
+    - Plot: Scatter plot
+    - Insight: Explored the relationship between sentiment subjectivity and polarity, investigating whether more subjective reviews tend to have more extreme polarities.
+---
+
+### Business Solution for App Performance and User Satisfaction
+
+1. **Category Optimization for Maximum Impact**
+   - Focus resources and marketing efforts on top-performing categories like Communication and Social, which exhibit high user engagement, positive sentiment, and significant installs.
+   - Tailor app features, updates, and promotional campaigns to resonate with user preferences within these dominant categories, ensuring maximum impact and user satisfaction.
+
+2. **Review and Ratings Enhancement**
+   - Develop targeted strategies to boost app ratings, leveraging the observed positive correlation (0.6) between ratings and installs.
+   - Implement in-app prompts and incentives for satisfied users to leave reviews, while promptly addressing negative feedback to demonstrate responsiveness and commitment to user satisfaction.
+
+3. **Pricing Strategy Refinement**
+   - Optimize pricing strategies based on the slight negative correlation (-0.09) between app prices and ratings/reviews.
+   - Conduct A/B testing and introduce flexible pricing tiers or promotional offers to attract price-sensitive users without compromising perceived value, thereby enhancing user acquisition and retention.
+
+4. **Sentiment-Driven Feature Enhancements**
+   - Prioritize feature enhancements based on sentiment analysis insights to address user satisfaction and pain points effectively.
+   - Capitalize on positive sentiment themes to strengthen app features that resonate with users, while addressing negative sentiments to improve overall user experience and mitigate churn.
+
+5. **Marketing Messaging Alignment**
+   - Align marketing messaging with sentiment trends to reinforce positive perceptions and attract new users.
+   - Ensure consistency between marketing campaigns and user sentiments, maintaining authenticity and trust to drive user engagement and loyalty.
+
+6. **Continuous Monitoring and Agile Iterations**
+   - Implement a robust feedback loop and agile development approach to continuously monitor user feedback, sentiment trends, and app performance metrics.
+   - Iterate and adapt app features, marketing strategies, and pricing models based on real-time insights, ensuring ongoing improvement, relevance, and competitiveness in the Google Play Store ecosystem.
+
+By implementing these targeted strategies informed by data-driven insights from the combined analysis, the client can optimize app performance, enhance user satisfaction, and drive sustainable business growth and competitive advantage in the dynamic and competitive Google Play Store environment.
+
+---
+### Conclusion
+
+In conclusion, the analysis underscores the importance of understanding user preferences, focusing on app quality, and aligning with market trends to succeed in the competitive landscape of the Google Play Store. By leveraging these insights, developers and businesses can make informed decisions to optimize app performance, enhance user satisfaction, and drive sustainable growth in the Android app market.
