@@ -15,7 +15,7 @@ Explore and analyse the data to discover key factors responsible for app engagem
 
 The business objective here is to gain actionable insights and make data-driven decisions to improve app performance and user satisfaction in the Google Play Store. This includes understanding user sentiments, analyzing app ratings, exploring category-wise trends, and identifying factors influencing app installs and reviews.
 
-![---]
+---
 
 # **Project Summary -**
 
@@ -43,6 +43,7 @@ These insights guide the development of targeted strategies for app performance 
 
 The project's success lies in its ability to translate data insights into actionable strategies that improve app performance, user satisfaction, and overall success on the Google Play Store platform.
 
+---
 
 ### Data Loading 
 
@@ -121,15 +122,22 @@ Hence, we will need to do some data cleaning.
    - Explore the column names using `data_df.columns` and `reviews_df.columns`.
 
 ```
-
+(data_df.columns)
 Index(['App', 'Category', 'Rating', 'Reviews', 'Size', 'Installs', 'Type',
        'Price', 'Content Rating', 'Genres', 'Last Updated', 'Current Ver',
        'Android Ver'],
+      dtype='object')
+
+(reviews_df.columns)
+Index(['App', 'Translated_Review', 'Sentiment', 'Sentiment_Polarity',
+       'Sentiment_Subjectivity'],
       dtype='object')
 ```
 
 3. **Unique Values:**
    - Identify unique values within each column (excluding `App`, `Reviews`, `Rating`, `Size`, `Price`, and `Installs`) using a loop to iterate through columns and displaying unique values.
+
+---
 
 ### Data Cleaning
 
@@ -153,14 +161,48 @@ Index(['App', 'Category', 'Rating', 'Reviews', 'Size', 'Installs', 'Type',
 2. **Cleaning User Reviews Data (Data Type Conversion):**
    - Convert the `reviews_df['Sentiment_Polarity']` column to float using `.astype(float)`.
 
-3. **Handling Missing Values:**
+3. **Missing Values:**
    - Identify missing value counts in both datasets using `.isna().sum()`.
-   - Analyze if imputation or removal is appropriate for missing values in each column.
 
-4. **Handling Duplicate Values:**
+   ```
+   Main Data: 
+   Rating         1474
+   Type              1
+   Current Ver       8
+   Android Ver       2
+   dtype: int64
+   
+   User Reviews: 
+   Translated_Review         26868
+   Sentiment                 26863
+   Sentiment_Polarity        26863
+   Sentiment_Subjectivity    26863
+   dtype: int64
+   ```
+
+4. **Duplicate Values:**
    - Check for duplicate rows in `data_df` and `reviews_df` using `.duplicated()`.
    - Count the number of duplicate rows in each dataset.
+  
+   ``` python
+   # Check for duplicate rows in data_df
+   duplicate_rows_data_df = data_df[data_df.duplicated()]
+   
+   # Check for duplicate rows in reviews_df
+   duplicate_rows_reviews_df = reviews_df[reviews_df.duplicated()]
+   
+   # Get the count of duplicate rows in each dataset
+   num_duplicates_data_df = len(duplicate_rows_data_df)
+   num_duplicates_reviews_df = len(duplicate_rows_reviews_df)
+   ```
+   ```
+   Number of duplicate rows in data_df: 483
+   Number of duplicate rows in reviews_df: 33616
+   ```
    - Decide on an appropriate strategy to address duplicates (e.g., dropping or merging).
+
+
+---
 
 ### Variables Description
 
@@ -180,7 +222,6 @@ Index(['App', 'Category', 'Rating', 'Reviews', 'Size', 'Installs', 'Type',
 12. Current Ver: Current version of the application.
 13. Android Ver: Minimum required Android version for the application to run.
 
-
 **Description of User Reviews - Dataset Columns**
 
 1. App: Name of the mobile application.
@@ -188,13 +229,19 @@ Index(['App', 'Category', 'Rating', 'Reviews', 'Size', 'Installs', 'Type',
 3. Sentiment: Sentiment analysis result of the review (e.g., Positive, Negative, Neutral).
 4. Sentiment_Polarity: Numerical value indicating the sentiment polarity of the review.
 5. Sentiment_Subjectivity: Numerical value indicating the subjectivity of the review (how subjective or objective it is).
+---
+
+### Data Wrangling
+
+- **Handling Missing Values:**
+   - The Rating column contains 1470 NaN values in the entire dataset. It is not practical to drop these rows because by doing so, we will loose a large amount of data, which may impact the final quality of the analysis.
+
+   - The NaN values in this case can be imputed by the aggregate (mean or median) of the remaining values in the Rating column.
 
 
-### Data Wrangling Summary
 
-- **Missing Values:**
-   - Describe how missing values were handled in each column (e.g., imputation or removal).
-   - Explain the rationale behind the chosen approach.
+
+ 
 - **Duplicates:**
    - Describe how duplicate rows were addressed in each dataset.
    - Explain the chosen approach for handling duplicates.
