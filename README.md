@@ -1,9 +1,23 @@
 # EDA - Play Store App Review Analysis
 This project conducts an exploratory data analysis on the Google Play Store apps dataset.  It covers data loading, cleaning, and preprocessing, followed by univariate, bivariate and multivariate analysis.
 
+# **Problem Statement**
+
+The goal of this project is to analyze Play Store app data along with customer reviews to derive actionable insights that drive app engagement and success on the Android platform. The dataset comprises two main components:
+
+1. **Play Store Apps Data**: This dataset includes information such as app category, ratings, reviews, size, installs, pricing, content rating, genres, and more.
+
+2. **Customer Reviews Data**: The second dataset contains translated customer reviews of the Android apps, along with sentiment analysis metrics like sentiment polarity and subjectivity.
+
+Explore and analyse the data to discover key factors responsible for app engagement and success.
+
+#### **Define Your Business Objective?**
+
+The business objective here is to gain actionable insights and make data-driven decisions to improve app performance and user satisfaction in the Google Play Store. This includes understanding user sentiments, analyzing app ratings, exploring category-wise trends, and identifying factors influencing app installs and reviews.
+
+---
+
 # **Project Summary -**
-
-
 
 The project aims to analyze Play Store app data and customer reviews to derive actionable insights that drive app engagement and success on the Android platform. It involves two main datasets: Play Store Apps Data and Customer Reviews Data.
 
@@ -28,20 +42,6 @@ These insights guide the development of targeted strategies for app performance 
 - **Pricing Strategy Refinement:** Optimize pricing strategies based on user sentiments and engagement metrics to attract price-sensitive users without compromising value.
 
 The project's success lies in its ability to translate data insights into actionable strategies that improve app performance, user satisfaction, and overall success on the Google Play Store platform.
-
-# **Problem Statement**
-
-The goal of this project is to analyze Play Store app data along with customer reviews to derive actionable insights that drive app engagement and success on the Android platform. The dataset comprises two main components:
-
-1. **Play Store Apps Data**: This dataset includes information such as app category, ratings, reviews, size, installs, pricing, content rating, genres, and more.
-
-2. **Customer Reviews Data**: The second dataset contains translated customer reviews of the Android apps, along with sentiment analysis metrics like sentiment polarity and subjectivity.
-
-Explore and analyse the data to discover key factors responsible for app engagement and success.
-
-#### **Define Your Business Objective?**
-
-The business objective here is to gain actionable insights and make data-driven decisions to improve app performance and user satisfaction in the Google Play Store. This includes understanding user sentiments, analyzing app ratings, exploring category-wise trends, and identifying factors influencing app installs and reviews.
 
 
 ### Data Loading 
@@ -72,9 +72,6 @@ Let's take a look at the data, which consists of two files:
    - Use `reviews_df.info()` to view data types and missing value counts for the user reviews dataset (`reviews_df`).
 
 ```
-]
-# Dataset Info
-data_df.info()
 <class 'pandas.core.frame.DataFrame'>
 RangeIndex: 10841 entries, 0 to 10840
 Data columns (total 13 columns):
@@ -96,8 +93,6 @@ Data columns (total 13 columns):
 dtypes: float64(1), object(12)
 memory usage: 1.1+ MB
 
-
-reviews_df.info()
 <class 'pandas.core.frame.DataFrame'>
 RangeIndex: 64295 entries, 0 to 64294
 Data columns (total 5 columns):
@@ -127,8 +122,6 @@ Hence, we will need to do some data cleaning.
 
 ```
 
-# Dataset Columns
-data_df.columns
 Index(['App', 'Category', 'Rating', 'Reviews', 'Size', 'Installs', 'Type',
        'Price', 'Content Rating', 'Genres', 'Last Updated', 'Current Ver',
        'Android Ver'],
