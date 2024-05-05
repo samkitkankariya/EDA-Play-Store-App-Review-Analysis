@@ -29,14 +29,7 @@ These insights guide the development of targeted strategies for app performance 
 
 The project's success lies in its ability to translate data insights into actionable strategies that improve app performance, user satisfaction, and overall success on the Google Play Store platform.
 
-# **GitHub Link -**
-
-https://github.com/samkitkankariya/EDA-Play-Store-App-Review-Analysis
-
 # **Problem Statement**
-
-
-**Problem Statement: Play Store App Analysis for Enhanced Engagement and Success**
 
 The goal of this project is to analyze Play Store app data along with customer reviews to derive actionable insights that drive app engagement and success on the Android platform. The dataset comprises two main components:
 
@@ -51,7 +44,21 @@ Explore and analyse the data to discover key factors responsible for app engagem
 The business objective here is to gain actionable insights and make data-driven decisions to improve app performance and user satisfaction in the Google Play Store. This includes understanding user sentiments, analyzing app ratings, exploring category-wise trends, and identifying factors influencing app installs and reviews.
 
 
-## ***1. Know Your Data***
+### Data Loading 
+
+1. Load the `playstore.csv` file containing app details.
+2. Load the `user_reviews.csv` file containing user reviews.
+
+```python
+from google.colab import drive
+drive.mount('/content/drive')
+
+# Load Dataset
+data_df = pd.read_csv('your-drive-path/Play Store Data.csv')
+reviews_df = pd.read_csv('your-drive-path/User Reviews.csv')
+```
+
+### Understanding the Data
 
 Let's take a look at the data, which consists of two files:
 
@@ -59,25 +66,74 @@ Let's take a look at the data, which consists of two files:
 
 - user_reviews.csv: contains 100 reviews for each app, most helpful first. The text in each review has been pre-processed and attributed with three new features: Sentiment (Positive, Negative or Neutral), Sentiment Polarity and Sentiment Subjectivity.
 
-## Data Wrangling for Play Store Analysis
-
-This is a README file for data wrangling processes applied to a dataset containing information on mobile applications from Google Play and corresponding user reviews. The wrangling steps aim to prepare the data for further analysis.
-
-### Data Loading (**Replace with your code for Colab**)
-
-**Note:** These instructions assume you've mounted your drive and have the data downloaded. Specific code for Colab mounting would need to be replaced here.
-
-1. Load the `playstore.csv` file containing app details.
-2. Load the `user_reviews.csv` file containing user reviews.
-
-### Understanding the Data
 
 1. **Dataframe Information:**
    - Use `data_df.info()` to view data types and missing value counts for the main dataset (`data_df`).
    - Use `reviews_df.info()` to view data types and missing value counts for the user reviews dataset (`reviews_df`).
 
+```
+]
+# Dataset Info
+data_df.info()
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 10841 entries, 0 to 10840
+Data columns (total 13 columns):
+ #   Column          Non-Null Count  Dtype  
+---  ------          --------------  -----  
+ 0   App             10841 non-null  object 
+ 1   Category        10841 non-null  object 
+ 2   Rating          9367 non-null   float64
+ 3   Reviews         10841 non-null  object 
+ 4   Size            10841 non-null  object 
+ 5   Installs        10841 non-null  object 
+ 6   Type            10840 non-null  object 
+ 7   Price           10841 non-null  object 
+ 8   Content Rating  10840 non-null  object 
+ 9   Genres          10841 non-null  object 
+ 10  Last Updated    10841 non-null  object 
+ 11  Current Ver     10833 non-null  object 
+ 12  Android Ver     10838 non-null  object 
+dtypes: float64(1), object(12)
+memory usage: 1.1+ MB
+
+
+reviews_df.info()
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 64295 entries, 0 to 64294
+Data columns (total 5 columns):
+ #   Column                  Non-Null Count  Dtype  
+---  ------                  --------------  -----  
+ 0   App                     64295 non-null  object 
+ 1   Translated_Review       37427 non-null  object 
+ 2   Sentiment               37432 non-null  object 
+ 3   Sentiment_Polarity      37432 non-null  float64
+ 4   Sentiment_Subjectivity  37432 non-null  float64
+dtypes: float64(2), object(3)
+memory usage: 2.5+ MB
+
+```
+
+*By diagnosing the data frame, we know that:*
+
+- There are 13 columns of properties with 10841 rows of data.
+- Column 'Reviews', 'Size', 'Installs' and 'Price' are in the type of 'object'
+- Values of column 'Size' are strings representing size in 'M' as Megabytes, 'k' as kilobytes and also 'Varies with devices'.
+- Values of column 'Installs' are strings representing install amount with symbols such as ',' and '+'.
+- Values of column 'Price' are strings representing price with symbol '$'.
+Hence, we will need to do some data cleaning.
+
 2. **Columns and Description:**
    - Explore the column names using `data_df.columns` and `reviews_df.columns`.
+
+```
+
+# Dataset Columns
+data_df.columns
+Index(['App', 'Category', 'Rating', 'Reviews', 'Size', 'Installs', 'Type',
+       'Price', 'Content Rating', 'Genres', 'Last Updated', 'Current Ver',
+       'Android Ver'],
+      dtype='object')
+```
 
 3. **Unique Values:**
    - Identify unique values within each column (excluding `App`, `Reviews`, `Rating`, `Size`, `Price`, and `Installs`) using a loop to iterate through columns and displaying unique values.
@@ -87,7 +143,6 @@ This is a README file for data wrangling processes applied to a dataset containi
 1. **Cleaning 'Reviews', 'Size', 'Installs', and 'Price' Columns (Data Type Conversion):**
    - **'Reviews'**:
      - Handle entries with 'M' (denoting Megabytes) by converting them to float values (e.g., '3.0M' becomes 3000000).
-     - Update the `data_df['Reviews']` column directly using `.at`.
      - Convert the entire column to float using `.astype(float)`.
    - **'Size'**:
      - Identify and remove rows with the value '1,000+' due to data inconsistency.
@@ -114,21 +169,33 @@ This is a README file for data wrangling processes applied to a dataset containi
    - Count the number of duplicate rows in each dataset.
    - Decide on an appropriate strategy to address duplicates (e.g., dropping or merging).
 
-### Code (**Replace with your actual code**)
+### Variables Description
 
-**Note:** Replace the placeholders below with your actual code for each data cleaning step.
+**Description of Main - Dataset Columns**
 
-```python
-# ... your data cleaning code here ...
-```
+1. App: Name of the mobile application.
+2. Category: Category or genre of the application.
+3. Rating: Average user rating of the application (on a scale of 1 to 5).
+4. Reviews: Number of user reviews/ratings received for the application.
+5. Size: Size of the application (in terms of storage space).
+6. Installs: Number of times the application has been installed/downloaded.
+7. Type: Type of the application (e.g., Free or Paid).
+8. Price: Price of the application (if it's a paid app).
+9. Content Rating: Content rating or maturity level of the application (e.g., Everyone, Teen, etc.).
+10. Genres: Specific genres or sub-categories of the application.
+11. Last Updated: Date when the application was last updated.
+12. Current Ver: Current version of the application.
+13. Android Ver: Minimum required Android version for the application to run.
 
-### Outputs (**Replace with your actual outputs**)
 
-**Note:** Replace the placeholders below with the actual outputs from your code.
+**Description of User Reviews - Dataset Columns**
 
-```
-# ... your data cleaning outputs here ...
-```
+1. App: Name of the mobile application.
+2. Translated_Review: Translated version of the user review for the application.
+3. Sentiment: Sentiment analysis result of the review (e.g., Positive, Negative, Neutral).
+4. Sentiment_Polarity: Numerical value indicating the sentiment polarity of the review.
+5. Sentiment_Subjectivity: Numerical value indicating the subjectivity of the review (how subjective or objective it is).
+
 
 ### Data Wrangling Summary
 
